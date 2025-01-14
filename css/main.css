@@ -1,3 +1,37 @@
+.main-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1em 3em;
+}
+
+.logo-icon {
+  width: 3.5vw;
+  height: auto;
+}
+
+.navigation {
+  display: flex;
+  gap: 20px; /* Space between links */
+}
+
+.nav-link {
+  text-decoration: none;
+  color: var(--text-blue-color);
+  font-size: clamp(16px, 1.2vw, 19px);
+  text-transform: lowercase;
+}
+
+.nav-link:hover {
+  text-decoration: underline; /* Optional hover effect */
+}
+
+.user-icon img {
+  width: 1.65vw;
+  height: auto;
+  display: block;
+}
+
 /* ===================== Marquee ===================== */
 .marquee-parent,
 .row.footer-row.footer-row-one {
@@ -11,7 +45,7 @@ pointer-events: none;
 padding: 0;
 }
 
-.marquee-parent {
+.marquee-parent { 
 padding: var(--section-padding-small) 0;
 transform: translateX(-50%);
 }
