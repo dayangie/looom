@@ -1,8 +1,10 @@
+/* ===================== Header ===================== */
+
 .main-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1em 3em;
+  padding: 1em 4em;
 }
 
 .logo-icon {
@@ -30,6 +32,57 @@
   width: 1.65vw;
   height: auto;
   display: block;
+}
+
+/* ===================== Hero Section ===================== */
+/* Hero Section */
+.hero-section {
+  background-color: #fffaf0; /* Match the header background */
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.hero-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* max-width: 1200px; */
+  margin: 0 auto;
+}
+
+.hero-text {
+  text-align: left;
+}
+
+.hero-subtitle {
+  margin-top: 10px;
+  font-size: 1rem;
+  background-color: var(--pink-color); 
+  padding: 5px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--black-color);
+  display: inline-block;
+}
+
+/* Masked Image */
+.masked-element {
+  position: relative;
+  width: 477px;
+  height: 477px;
+  overflow: hidden;
+  mask: url(#mask0_129_297);
+  -webkit-mask: url(#mask0_129_297);
+  mask-type: alpha;
+  -webkit-mask-type: alpha;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.masked-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* ===================== Marquee ===================== */

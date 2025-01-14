@@ -152,6 +152,7 @@ body {
   font-size: clamp(16px, 1.2vw, 19px);
   background-color: var(--main-bg-color);
   overflow-x: hidden;
+  margin: 0 !important;
 }
 
 /* ===================== Preloader ===================== */
@@ -220,7 +221,7 @@ em {
   padding: 0;
   margin: 0;
   font-style: normal;
-  font-weight: 450;
+  font-weight: 100;
   letter-spacing: normal;
 }
 
@@ -271,7 +272,7 @@ h1 {
   h3 {
     color: var(--black-color);
     font-family: 'InstrumentSerif-Regular', sans-serif;
-    font-weight: 600;
+    /* font-weight: 600; */
     margin-top: 0;
     margin-bottom: .5rem;
   }
@@ -281,7 +282,7 @@ h1 {
   h6 {
     color: var(--white-color);
     font-family: 'InstrumentSerif-Regular', sans-serif;
-    font-weight: 500;
+    /* font-weight: 500; */
     margin-top: 0;
     margin-bottom: 1em;
   }
@@ -358,7 +359,11 @@ h1 {
   }
   
   .font-secondary {
-    font-family: 'Pinyon Script', serif !important;
+    font-family: 'PinyonScript-Regular', serif !important;
+  }
+
+  .font-bigger {
+    font-size: 1.6em;
   }
   
   .font-saonara {
@@ -588,6 +593,19 @@ a {
   
   .pb-100 {
   padding-bottom: 100px;
+  }
+
+  .pl-4em {
+    padding-left: 4em;
+  }
+  
+  .pr-4em {
+    padding-right: 4em;
+  } 
+
+  .plr-4em {
+    padding-left: 4em;
+    padding-right: 4em;
   }
   
   .mb-unset {
@@ -861,3 +879,9 @@ a {
     
     
     }
+
+    /* ===================== General ===================== */
+    .text-center {
+      text-align: center;
+      margin: 0 auto;
+      }
