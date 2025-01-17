@@ -46,6 +46,11 @@
 }
 
 @font-face {
+  font-family: "DMSerifText-Regular";
+  src: url("../assets/fonts/DMSerifText-Regular.ttf") format("truetype");
+}
+
+@font-face {
     font-family: "InstrumentSerif-Regular";
     src: url("../assets/fonts/InstrumentSerif-Regular.ttf") format("truetype");
 }
@@ -182,7 +187,7 @@ html {
 html,
 body {
   width: 100%;
-  min-height: 100%;
+  height: 100%;
   -webkit-font-smoothing: antialiased;
   position: relative;
 }
@@ -289,10 +294,9 @@ h1 {
   
   p {
     font-family: 'DMMono-Medium', sans-serif;
-    font-size: 1.25em;
+    font-size: 1em;
     line-height: 1.55;
     margin-top: 0;
-    margin-bottom: 1em;
   }
   
   p.small {
@@ -349,6 +353,9 @@ h1 {
     color: var(--black-color) !important;
   }
   
+  .font-yellow {
+    color: var(--light-yellow-color) !important;
+  }
   
   .font-pink {
     color: var(--pink-color) !important;
@@ -360,6 +367,10 @@ h1 {
   
   .font-secondary {
     font-family: 'PinyonScript-Regular', serif !important;
+  }
+
+  .font-dmserif {
+    font-family: 'DMSerifText-Regular', serif !important;
   }
 
   .font-bigger {
