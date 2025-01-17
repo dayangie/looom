@@ -34,6 +34,17 @@
   display: block;
 }
 
+/* ===================== Footer ===================== */
+.footer-wrapper {
+  background-color: var(--dark-green-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  position: relative;
+  padding: 1em 4em;
+}
+
 /* ===================== Hero Section ===================== */
 /* Hero Section */
 .hero-section {
