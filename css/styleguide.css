@@ -901,3 +901,83 @@ a {
       text-align: center;
       margin: 0 auto;
       }
+
+
+      
+/* ===================== Ryna ===================== */
+
+/* main {
+  text-align: center;
+  padding: 40px;
+}
+
+    main h1 {
+        font-size: 48px;
+        margin-bottom: 10px;
+        font-family: 'Brush Script MT', cursive;
+    } */
+
+    .collections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      padding: 20px;
+  }
+
+  .collection-card {
+      background-color: #eaeaea;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+  }
+
+  .collection-card:hover {
+      transform: scale(1.05);
+  }
+
+  #modal, #preview-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+  }
+
+  #modal-content, #preview-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 400px;
+  }
+
+  form input, form textarea, form button {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+  }
+
+  button {
+      background-color: #8BAF5D;
+      color: white;
+      border: none;
+      cursor: pointer;
+  }
+
+  button:hover {
+      background-color: #76994c;
+  }
+
+  .actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-around;
+  }
+
