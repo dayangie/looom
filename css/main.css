@@ -238,6 +238,28 @@ margin-top: -60px;
     margin:0;
 }
 
+/* Untuk galeri */
+.gallery img,
+.popup img {
+    max-width: 100%; /* Saiz imej tidak lebih besar dari kontainer */
+    height: 200px;   /* Tetapkan tinggi seragam */
+    object-fit: cover; /* Potong imej untuk mengikut dimensi */
+    border-radius: 8px; /* Sudut bulat */
+    margin: 0 auto; /* Selaraskan mendatar */
+    display: block; /* Membenarkan margin auto berfungsi */
+}
+
+/* Untuk kontainer supaya imej juga selaras secara menegak */
+.popup .popup-content,
+.gallery .bookmark-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Selaraskan mendatar */
+    justify-content: center; /* Selaraskan menegak */
+}
+
+
+
 .card {
     background: var(--pink-color);
     border: 1px solid #ddd;
@@ -275,23 +297,30 @@ margin-top: -60px;
     color: #fff;
 }
 
+/* Styling for the main popup */
 .popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--pink-color);
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 350px;
-    z-index: 1000;
-    display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--pink-color);
+  border: 1px solid #ddd;
+  border-radius: 12px; /* Soft rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Slight shadow for better visibility */
+  padding: 30px;
+  width: 400px;
+  max-width: 90%;
+  z-index: 1000;
+  display: none;
+  overflow-y: auto;
+  max-height: 90vh; /* To keep it within the viewport */
+  transition: transform 0.3s ease;
 }
 
+/* Show popup when active */
 .popup.active {
-    display: block;
+  display: block;
+  transform: translate(-50%, -50%) scale(1); /* Add a slight scale animation */
 }
 
 .popup input,
@@ -332,6 +361,7 @@ margin-top: -60px;
     z-index: 999; /* Ensure it's on top of everything else */
     color: #fff;
     padding: 20px;
+    overflow-y: auto;
 }
 
 .folder-layout.active {
@@ -348,10 +378,13 @@ margin-top: -60px;
 }
 
 .bookmark-card img {
-    max-width: 100%;
-    border-radius: 8px;
-    margin-bottom: 10px;
+  width: 100%;            /* Membuatkan gambar memenuhi lebar kontena */
+  height: auto;           /* Menjaga nisbah aspek imej */
+  max-height: 200px;      /* Menetapkan had tinggi maksimum gambar */
+  object-fit: cover;      /* Menjaga gambar agar tidak pecah/terpusing */
+  border-radius: 8px;     /* Memberikan sedikit lengkung pada sudut gambar */
 }
+
 /* Gaya link dalam bookmark */
 .bookmark-card a {
     color: #007bff; /* Warna biru asas */
@@ -364,6 +397,62 @@ margin-top: -60px;
     text-decoration: underline; /* Tambah garis bawah semasa hover */
 }
 
+/* Styling for bookmark preview container */
+.bookmark-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* Image styles in the bookmark preview */
+.bookmark-preview img {
+  width: 100%;
+  height: auto;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 8px; /* Round the corners of the image */
+  border: 2px solid #fff; /* White border around image */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow to elevate the image */
+}
+
+/* Title for the bookmark */
+.bookmark-preview .title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin: 0;
+  padding: 5px;
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  width: 100%;
+}
+
+/* Link style inside preview */
+.bookmark-preview a {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 16px;
+  text-align: center;
+}
+
+.bookmark-preview a:hover {
+  text-decoration: underline;
+  color: #0056b3; /* Darker shade on hover */
+}
+
+/* Additional description styling */
+.bookmark-preview .description {
+  font-size: 14px;
+  color: #555;
+  text-align: center;
+  line-height: 1.6;
+  margin-top: 10px;
+  padding: 0 10px;
+}
+
 /* Input link gaya */
 .popup input[type="text"] {
     max-width: 100%; /* Pastikan muat dengan popup */
@@ -373,14 +462,23 @@ margin-top: -60px;
     box-sizing: border-box; /* Pastikan padding termasuk dalam lebar */
 }
 
+/* Style for button alignment */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
 /*Action button*/
 .actions button {
 background: #007bff; /* Warna asas biru */
 color: #fff;
 border: none;
-padding: 8px 12px;
+padding: 10px 20px;
 font-size: 12px;
-border-radius: 6px;
+border-radius: 5px;
 margin-right: 5px;
 cursor: pointer;
 transition: background 0.3s ease, transform 0.2s ease;
