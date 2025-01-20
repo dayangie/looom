@@ -27,7 +27,7 @@
         <h1 class="text-center "><span class="font-secondary font-bigger ">B</span>ookmarks<span class="sparkle"></span></h1>
         
     <div class="courses-section plr-4em mt-50">
-        <h2>Courses</h2>
+        <h2 class="sparkle">Courses</h2>
 
         <div class="gallery" id="gallery">
             <div class="card new" onclick="showSubjectPopup()">+ New Page</div>
@@ -61,15 +61,15 @@
             <button onclick="closeFolder()">Back</button>
              <div class="logo-bookmark"> 
                 <img src="assets/img/bookmark.png" alt="Looom Logo" class="logo-bookmark">
-            <h2 class="sparkle" id="folderTitle"></h2>
+            <strong><h2 class="sparkle" id="folderTitle" style="white-space: nowrap;"></h2></strong>
         </div>
             <div class="gallery" id="bookmarkGallery"></div>
             <button onclick="showBookmarkPopup()">+ Add Bookmark</button>
-        </div>
-    
+        </div> 
     </div>
        
         <script>
+
             let currentSubjectCard;
             let folderLayout = document.getElementById('folderLayout');
             let gallery = document.getElementById('gallery');
@@ -98,12 +98,15 @@
                 </div>
             `;
     
-            // Klik pada kad hanya membuka folder jika bukan klik pada butang
+            // untuk buka layout folder bookmarks
             subjectCard.addEventListener('click', () => openFolder(subjectCard, subjectName));
             subjectsData[subjectName] = [];
             gallery.insertBefore(subjectCard, document.querySelector('.card.new'));
             closePopup('subjectPopup');
             document.getElementById('subjectName').value = '';
+
+            // Save the subjects data to localStorage
+            localStorage.setItem('subjectsData', JSON.stringify(subjectsData));
         }
     
     function deleteSubject(event, button) {
@@ -117,13 +120,18 @@
         if (confirmDelete) {
             delete subjectsData[subjectName];
             gallery.removeChild(subjectCard);
+
+        // Remove the subject data from localStorage
+        localStorage.setItem('subjectsData', JSON.stringify(subjectsData));
         }
     }
     
+    //Function close folder
     function closeFolder() {
         folderLayout.classList.remove('active');
     }
     
+    //Function open folder
     function openFolder(card, title) {
         currentSubjectCard = card;
         currentFolderName = title; // Pastikan nama folder diselaraskan
@@ -133,84 +141,210 @@
     
         console.log('Subjects Data:', subjectsData);
         console.log('Current Folder Name:', currentFolderName);
+
+        // Save the updated subjects data to localStorage
+        localStorage.setItem('subjectsData', JSON.stringify(subjectsData));
     }
     
-    
-            function showBookmarkPopup() {
-                document.getElementById('bookmarkPopup').classList.add('active');
+    //Function  poppup Bookmarks
+    function showBookmarkPopup() {
+        document.getElementById('bookmarkPopup').classList.add('active');
+    }
+            
+            //Function LocalStorage for save data
+            function handleFileInput(inputElement, callback) {
+                const file = inputElement.files[0];
+                
+                if (file) {
+                    // Limit the file size to 1MB (adjust as needed)
+                    if (file.size > 1048576) {  // 1MB limit
+                        alert("File is too large! Please upload a smaller file.");
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onloadend = function () {
+                        callback(reader.result); // Pass the base64 string of the file
+                    };
+                    reader.readAsDataURL(file); // Convert file to base64 string
+                }
             }
-    
-            function saveBookmark() {
-            const title = document.getElementById('bookmarkTitle').value;
-            const fileInput = document.getElementById('bookmarkFile');
-            const file = fileInput.files[0];
-            const link = document.getElementById('bookmarkLink').value;
-            const note = document.getElementById('bookmarkNote').value;
-    
-            if (title.trim() === '') {
-                alert('Please enter a title');
-                return;
-            }
-    
-            const subjectName = document.getElementById('folderTitle').innerText;
-    
-            // Jika sedang mengedit bookmark
+
+    // Function in saveBookmark
+    function saveBookmark() {
+        const title = document.getElementById('bookmarkTitle').value;
+        const fileInput = document.getElementById('bookmarkFile');
+        const link = document.getElementById('bookmarkLink').value;
+        const note = document.getElementById('bookmarkNote').value;
+
+        if (title.trim() === '') {
+            alert('Please enter a title');
+            return;
+        }
+
+        const subjectName = document.getElementById('folderTitle').innerText;
+
+        let fileBase64 = null;
+        if (fileInput.files.length > 0) {
+            // Convert file to base64
+            handleFileInput(fileInput, function (base64String) {
+                fileBase64 = base64String;
+
+                const bookmark = { title, note, link, file: fileBase64 };
+
+                // Add or update bookmark in subjectsData
+                if (editingBookmark !== null) {
+                    const bookmarkIndex = editingBookmark.dataset.index;
+                    subjectsData[subjectName][bookmarkIndex] = bookmark;
+                    editingBookmark = null; // Reset editing mode
+                } else {
+                    subjectsData[subjectName].push(bookmark);
+                }
+
+                // Save to localStorage
+                localStorage.setItem('subjectsData', JSON.stringify(subjectsData));
+                displayBookmarks(subjectName); // Refresh the bookmarks display
+                closePopup('bookmarkPopup'); // Close the popup
+            });
+        } else {
+            // No file, just save the bookmark
+            const bookmark = { title, note, link, file: fileBase64 };
             if (editingBookmark !== null) {
                 const bookmarkIndex = editingBookmark.dataset.index;
-                subjectsData[subjectName][bookmarkIndex] = { title, note, link, file };
-                editingBookmark = null;
+                subjectsData[subjectName][bookmarkIndex] = bookmark;
+                editingBookmark = null; // Reset editing mode
             } else {
-                // Simpan bookmark baharu
-                const bookmark = { title, note, link, file };
                 subjectsData[subjectName].push(bookmark);
             }
-    
-            displayBookmarks(subjectName);
-    
-            closePopup('bookmarkPopup');
-            document.getElementById('bookmarkTitle').value = '';
-            fileInput.value = '';
-            document.getElementById('bookmarkLink').value = '';
-            document.getElementById('bookmarkNote').value = '';
+
+            // Save to localStorage
+            localStorage.setItem('subjectsData', JSON.stringify(subjectsData));
+            displayBookmarks(subjectName); // Refresh the bookmarks display
+            closePopup('bookmarkPopup'); // Close the popup
         }
-    
-        function displayBookmarks(subjectName) {
+
+        // Clear input fields after saving
+        document.getElementById('bookmarkTitle').value = '';
+        fileInput.value = '';
+        document.getElementById('bookmarkLink').value = '';
+        document.getElementById('bookmarkNote').value = '';
+    }
+
+    //Function in displaybookmarks
+    function displayBookmarks(subjectName) {
         const bookmarkGallery = document.getElementById('bookmarkGallery');
-        bookmarkGallery.innerHTML = ''; // Kosongkan gallery sebelum menambah bookmark
-    
-        // Semak jika terdapat bookmark untuk subjek tersebut
+        bookmarkGallery.innerHTML = ''; // Clear existing bookmarks
+
         if (subjectsData[subjectName]) {
             subjectsData[subjectName].forEach((bookmark, index) => {
                 const bookmarkCard = document.createElement('div');
                 bookmarkCard.classList.add('bookmark-card');
-    
                 let filePreview = '';
+
                 if (bookmark.file) {
-                    const fileURL = URL.createObjectURL(bookmark.file);
-                    filePreview = `<img src="${fileURL}" alt="Preview" style="max-width: 100%; border-radius: 8px; margin-bottom: 10px;" />`;
+                    // Create the file preview for different file types (image, PDF, etc.)
+                    const fileURL = bookmark.file; // Base64 string
+                    const fileExtension = fileURL.split(';')[0].split('/')[1].toLowerCase();
+
+                    if (fileExtension === 'pdf') {
+                        filePreview = `<iframe src="${fileURL}" style="width: 100%; height: 200px;"></iframe>`;
+                    } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+                    filePreview = `<img src="${fileURL}" style="width: 100%; height: auto; max-height: 200px; object-fit: cover;" />`;
                 }
-    
-                const linkHTML = bookmark.link
-                    ? `<a href="${bookmark.link}" target="_blank">${bookmark.link}</a>`
-                    : '';
-    
+                else if (['mp4', 'webm'].includes(fileExtension)) {
+                        // Preview video
+                        filePreview = `<video controls style="width: 100%;"><source src="${fileURL}" type="video/${fileExtension}">Your browser does not support the video tag.</video>`;
+                    } else if (['mp3', 'wav'].includes(fileExtension)) {
+                        // Preview audio
+                        filePreview = `<audio controls style="width: 100%;"><source src="${fileURL}" type="audio/${fileExtension}">Your browser does not support the audio element.</audio>`;
+                    } else {
+                        filePreview = `<p>File preview not supported for this file type.</p>`;
+                    }
+                }
+
                 bookmarkCard.innerHTML = `
                     <p><strong>${bookmark.title}</strong></p>
                     ${filePreview}
                     <p>${bookmark.note}</p>
-                    <p><a href="${bookmark.link}" target="_blank">${bookmark.link}</a></p>
+                    ${bookmark.link ? `<p><a href="${bookmark.link}" target="_blank">${bookmark.link}</a></p>` : ''}
                     <div class="actions">
-                        <button onclick="editBookmark('${subjectName}', ${index})">Edit</button>
+                        <button onclick="previewBookmark('${subjectName}', ${index})">Preview</button>
                         <button onclick="downloadBookmark('${subjectName}', ${index})">Download</button>
+                        <button onclick="editBookmark('${subjectName}', ${index})">Edit</button>
                         <button onclick="deleteBookmark('${subjectName}', ${index})">Delete</button>
                     </div>
                 `;
-    
+
                 bookmarkGallery.appendChild(bookmarkCard);
             });
         }
     }
-    
+
+    // Preview function for bookmarks
+    function previewBookmark(subjectName, index) {
+    const bookmark = subjectsData[subjectName][index];
+
+    // Create preview popup elements
+    const previewPopup = document.createElement('div');
+    previewPopup.classList.add('popup', 'active');
+
+    let previewContent = `
+        <h3 class="text-center" style="padding: 20px;">Bookmark Preview</h3>
+        <p><strong>Title:</strong> ${bookmark.title}</p>
+        <p><strong>Notes:</strong> ${bookmark.note}</p>
+    `;
+
+    // Handle file preview based on file type
+    if (bookmark.file) {
+        const fileURL = bookmark.file;
+        const fileExtension = fileURL.split(';')[0].split('/')[1].toLowerCase();
+
+        // Handle different file types
+        if (fileExtension === 'pdf') {
+            // Preview PDF
+            previewContent += `<iframe src="${fileURL}" style="width: 100%; height: 300px; border: none;"></iframe>`;
+        } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+            // Preview Image
+            previewContent += `<div class="image-container"><img src="${fileURL}" alt="Preview" class="bookmark-image" /></div>`;
+        } else if (['mp3', 'wav'].includes(fileExtension)) {
+            // Preview Audio
+            previewContent += `<audio controls style="width: 100%;"><source src="${fileURL}" type="audio/${fileExtension}">Your browser does not support the audio element.</audio>`;
+        } else if (['mp4', 'webm'].includes(fileExtension)) {
+            // Preview Video
+            previewContent += `<video controls style="width: 100%; height: auto;"><source src="${fileURL}" type="video/${fileExtension}">Your browser does not support the video tag.</video>`;
+        } else {
+            previewContent += `<p>Preview not supported for this file type. Please download this file to preview.</p>`;
+        }
+    } else {
+        previewContent += `<p>No file attached to this bookmark.</p>`;
+    }
+
+    // Check if there's a link and add it to the preview
+    if (bookmark.link) {
+        previewContent += `
+            <p><strong>Link:</strong> <a href="${bookmark.link}" target="_blank">${bookmark.link}</a></p>
+        `;
+    }
+
+    // Close button for the preview popup
+    previewContent += `
+        <div class="actions">
+            <button onclick="closePreview(this)">Close</button>
+        </div>
+    `;
+
+    // Set the preview popup content and append it to the body
+    previewPopup.innerHTML = previewContent;
+    document.body.appendChild(previewPopup);
+}
+
+    //Function button closePreview
+    function closePreview(button) {
+        const popup = button.closest('.popup');
+        document.body.removeChild(popup);
+    }
+
+        //function button editbookmark
         function editBookmark(subjectName, index) {
             const bookmark = subjectsData[subjectName][index];
             document.getElementById('bookmarkTitle').value = bookmark.title;
@@ -219,46 +353,77 @@
     
             editingBookmark = { dataset: { index } }; // Simpan rujukan untuk editing
             document.getElementById('bookmarkPopup').classList.add('active');
+
+            // Save the updated subjects data to localStorage
+            localStorage.setItem('subjectsData', JSON.stringify(subjectsData));
         }
     
+        //Function button dowloadbookmark
         function downloadBookmark(subjectName, index) {
             const bookmark = subjectsData[subjectName][index];
-            if (bookmark.file) {
-                const fileURL = URL.createObjectURL(bookmark.file);
-                const a = document.createElement('a');
-                a.href = fileURL;
-                a.download = bookmark.file.name;
-                a.click();
-            } else {
-                alert('No file available for download.');
-            }
+                if (bookmark.file) {
+                    const fileURL = bookmark.file;
+                    const a = document.createElement('a');
+                    a.href = fileURL;
+                    a.download = bookmark.title; // Name the file as the bookmark title
+                    a.click();
+                } else {
+                    alert('No file available for download.');
+                }
         }
-    
+
+
+        //Function button deletebookmark
         function deleteBookmark(subjectName, index) {
             const confirmDelete = confirm('Are you sure you want to delete this bookmark?');
-            if (confirmDelete) {
-                subjectsData[subjectName].splice(index, 1);
-                displayBookmarks(subjectName);
-            }
+                if (confirmDelete) {
+                    subjectsData[subjectName].splice(index, 1);
+                    displayBookmarks(subjectName);
+
+                // Update localStorage
+                localStorage.setItem('subjectsData', JSON.stringify(subjectsData)); 
+                }
         }
     
-            function closePopup(popupId) {
-                document.getElementById(popupId).classList.remove('active');
+        //Function button closepopup
+        function closePopup(popupId) {
+            document.getElementById(popupId).classList.remove('active');
+        }
+        
+        //Call data from LocalStorage
+        window.onload = function() {
+            const storedSubjectsData = localStorage.getItem('subjectsData');
+            if (storedSubjectsData) {
+                subjectsData = JSON.parse(storedSubjectsData);
+                Object.keys(subjectsData).forEach(subjectName => {
+                    const subjectCard = document.createElement('div');
+                    subjectCard.classList.add('card');
+                    subjectCard.innerHTML = `
+                        <p>${subjectName}</p>
+                        <div class="card-actions">
+                            <button class="delete-btn" onclick="deleteSubject(event, this)">Delete</button>
+                        </div>
+                    `;
+                    subjectCard.addEventListener('click', () => openFolder(subjectCard, subjectName));
+                    gallery.insertBefore(subjectCard, document.querySelector('.card.new'));
+                });
             }
-        </script>
-    
-    </main>
-<!-- <div style="height: 150px;"></div> -->
-<footer>
-    <div class="footer-wrapper">
-        <div class="footer-text">
-            <p class="font-yellow">copyright &copy; 2024 looom sdn bhd </p>
-        </div>
-        <div class="footer-logo">
-            <p class="big font-dmserif font-pink">looom ✿</p>
-        </div>
-    </div>
-</footer>
+        };
 
-</body>
+    </script>
+    </main>
+
+    <!-- <div style="height: 150px;"></div> -->
+    <footer>
+        <div class="footer-wrapper">
+            <div class="footer-text">
+                <p class="font-yellow">copyright &copy; 2024 looom sdn bhd </p>
+            </div>
+            <div class="footer-logo">
+                <p class="big font-dmserif font-pink">looom ✿</p>
+            </div>
+        </div>
+    </footer>
+
+    </body>
 </html>
