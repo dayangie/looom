@@ -7,6 +7,9 @@
     <link rel="icon" href="/assets/img/logo.png" type="image/png">
     <link rel="stylesheet" href="/css/styleguide.css">
     <link rel="stylesheet" href="/css/main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
 </head>
 <body>
     <header class="main-header">
@@ -16,7 +19,7 @@
         <nav class="navigation">
             <a href="#" class="nav-link">courses</a>
             <a href="#" class="nav-link">schedule</a>
-            <a href="#" class="nav-link">bookmarks</a>
+            <a href="bookmarks.html" class="nav-link">bookmarks</a>
         </nav>
         <div class="user-icon">
             <img src="/assets/img/profile-icon.png" alt="User Icon">
@@ -48,6 +51,56 @@
             </div>
         </div>
     </section>
+
+    <!-- marquee -->
+    <div class="marquee-parent pb-50 pb-20-m top-date">
+        <div class="marquee-container">
+          <div class="marquee-wrapper" data-scroll data-scroll-direction="horizontal" data-scroll-speed="3">
+            <div class="marquee-inner-wrapper">
+              <div class="marquee-inner-wrap">
+                <div class="marquee-item">
+                  <h3>3 January - 9 February 2025</h3>
+                  <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19">
+        <circle id="Ellipse_17" data-name="Ellipse 17" cx="9.5" cy="9.5" r="9.5" fill="#3b2316" />
+      </svg>
+      
+                  </span>
+                </div>
+                <div class="marquee-item">
+                  <h3>3 January - 9 February 2025</h3>
+                  <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19">
+        <circle id="Ellipse_17" data-name="Ellipse 17" cx="9.5" cy="9.5" r="9.5" fill="#3b2316" />
+      </svg>
+      
+                  </span>
+                </div>
+                <div class="marquee-item">
+                  <h3>3 January - 9 February 2025</h3>
+                  <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19">
+        <circle id="Ellipse_17" data-name="Ellipse 17" cx="9.5" cy="9.5" r="9.5" fill="#3b2316" />
+      </svg>
+      
+                  </span>
+                </div>
+                <div class="marquee-item">
+                  <h3>3 January - 9 February 2025</h3>
+                  <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19">
+        <circle id="Ellipse_17" data-name="Ellipse 17" cx="9.5" cy="9.5" r="9.5" fill="#3b2316" />
+      </svg>
+      
+                  </span>
+                </div>
+              </div>
+            </div>
+      
+          </div>
+        </div>
+      </div>
+    
    </main>
 
     <footer>
@@ -60,6 +113,69 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // Add your GSAP functions here
+        function initMarquee() {
+          let direction = 1; // 1 = forward, -1 = backward scroll
+          const roll1 = roll(".marquee-wrapper .marquee-inner-wrap", { duration: 30 }),
+                scroll = ScrollTrigger.create({
+                  trigger: document.querySelector('.marquee-wrapper .marquee-inner-wrapper'),
+                  onUpdate(self) {
+                    if (self.direction !== direction) {
+                      direction *= -1;
+                      gsap.to([roll1], {
+                        timeScale: direction,
+                        overwrite: true
+                      });
+                    }
+                    self.direction === -1
+                      ? document.querySelector(".marquee-wrapper").classList.remove('flipped')
+                      : document.querySelector(".marquee-wrapper").classList.add('flipped');
+                  }
+                });
+      
+          function roll(targets, vars, reverse) {
+            vars = vars || {};
+            vars.ease || (vars.ease = "none");
+            const tl = gsap.timeline({
+                repeat: -1,
+                onReverseComplete() {
+                  this.totalTime(this.rawTime() + this.duration() * 10);
+                }
+              }),
+              elements = gsap.utils.toArray(targets),
+              clones = elements.map(el => {
+                let clone = el.cloneNode(true);
+                el.parentNode.appendChild(clone);
+                return clone;
+              }),
+              positionClones = () => elements.forEach((el, i) => gsap.set(clones[i], {
+                position: "absolute",
+                overwrite: false,
+                top: el.offsetTop,
+                left: el.offsetLeft + (reverse ? -el.offsetWidth : el.offsetWidth)
+              }));
+            positionClones();
+            elements.forEach((el, i) => tl.to([el, clones[i]], {
+              xPercent: reverse ? 100 : -100,
+              ...vars
+            }, 0));
+            window.addEventListener("resize", () => {
+              let time = tl.totalTime();
+              tl.totalTime(0);
+              positionClones();
+              tl.totalTime(time);
+            });
+            return tl;
+          }
+        }
+      
+        // Initialize all animations on page load
+        window.addEventListener("load", () => {
+          initMarquee();
+        });
+      </script>
     
 </body>
 </html>
